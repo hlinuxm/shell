@@ -1,0 +1,46 @@
+#!/bin/bash
+yum -y install gcc pcre-devel openssl-devel zlib-devel php php-mysql mariadb mariadb-server mariadb-devel php-fpm
+wget ftp://192.168.4.254/mysql/Zabbix/zabbix-3.4.4.tar.gz
+wget ftp://192.168.4.254/lnmp_soft/nginx-1.12.2.tar.gz
+tar -xf nginx-1.12.2.tar.gz
+cd nginx-1.12.2/
+./configure --with-http_ssl_module
+make && make install
+ln -s /usr/local/nginx/sbin/nginx /sbin/
+sed -i '65,68s/^ *#//g' /usr/local/nginx/conf/nginx.conf
+sed -i '70,71s/^ *#//g' /usr/local/nginx/conf/nginx.conf
+sed -i 70s/fastcgi_params/fastcgi.conf/ /usr/local/nginx/conf/nginx.conf
+nginx
+systemctl start php-fpm
+systemctl start mariadb
+yum -y install net-snmp-devel curl-devel libevent-devel
+tar -xf zabbix-3.4.4.tar.gz
+cd zabbix-3.4.4/
+./configure --enable-server --enable-proxy --enable-agent --with-mysql=/usr/bin/mysql_config --with-net-snmp --with-libcurl
+make && make install
+mysql -e 'create database zabbix character set utf8'
+mysql -e "grant all on zabbix.* to zabbix@localhost identified by '123123'"
+cd
+cd zabbix-3.4.4/database/mysql/
+mysql -uzabbix -p123123 zabbix < schema.sql
+mysql -uzabbix -p123123 zabbix < images.sql
+mysql -uzabbix -p123123 zabbix < data.sql
+cd
+cd zabbix-3.4.4/frontends/php/
+cp -a * /usr/local/nginx/html/
+chmod -R 777 /usr/local/nginx/html/*
+echo 'fastcgi_buffers 8 16k;' > /root/nginx_zabbix
+echo 'fastcgi_buffer_size 32k;' >> /root/nginx_zabbix
+echo 'fastcgi_connect_timeout 300;' >> /root/nginx_zabbix
+echo 'fastcgi_send_timeout 300;' >> /root/nginx_zabbix
+echo 'fastcgi_read_timeout 300;' >> /root/nginx_zabbix
+sed -ir '19r /root/nginx_zabbix' /usr/local/nginx/conf/nginx.conf
+nginx -s reload
+yum -y install php-gd php-xml php-ldap
+yum -y install php-bcmath.x86_64
+yum -y install php-mbstring.x86_64
+sed -i '878s/^;//;878s#=#= Asia/Shang#' /etc/php.ini
+sed -i '384s/30/300/' /etc/php.ini
+sed -i '672s/8M/32M/' /etc/php.ini
+sed -i '394s/60/300/' /etc/php.ini
+systemctl restart php-fpm
