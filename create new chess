@@ -1,0 +1,185 @@
+#!/usr/bin/python
+#coding:utf-8
+
+import random,time
+money=10000
+print '''欢迎来到达外首家线上娱乐中心！
+下注前，请认真阅读游戏规则：
+庄(电脑)和玩家各发5张牌
+数字相加，大者胜；
+一方为10的整数倍，则中牛；
+A为1；
+J为11；
+Q为12；
+K为13'''
+raw_input('输入回车跳过！')
+
+while True:
+    if money==0:
+        break
+    if money<0:
+        print "你不仅输光了，还欠了%s元"%money
+        break
+    while money>0:
+        s1=int(random.randint(1,13))
+        s2=int(random.randint(1,13))
+        s3=int(random.randint(1,13))
+        s4=int(random.randint(1,13))
+        s5=int(random.randint(1,13))
+        ps1=int(random.randint(1,13))
+        ps2=int(random.randint(1,13))
+        ps3=int(random.randint(1,13))
+        ps4=int(random.randint(1,13))
+        ps5=int(random.randint(1,13))
+
+        print '你现在共有%s元'%money
+        bet=int(raw_input("请下注(最小1000元):"))
+        if bet<1000:
+            print "玩不玩？不玩滚"
+            time.sleep(2)
+            break
+        elif bet>1000:
+            print "对不起，只接受1000元！土豪请移步万元区"
+            time.sleep(2)
+            break
+        money=money-bet
+        d1=s1+s2+s3+s4+s5
+        d2=d1%10
+        pd1=ps1+ps2+ps3+ps4+ps5
+        pd2=pd1%10
+#为客户替换1，11，12，13为A，J，Q，K
+        if s1==1:
+            s1='A'
+        elif s1==11:
+            s1='J'
+        elif s1==12:
+            s1='Q'
+        elif s1==13:
+            s1='K'
+        else:
+            s1='%s'%s1
+        if s2==1:
+            s2='A'
+        elif s2==11:
+            s2='J'
+        elif s2==12:
+            s2='Q'
+        elif s2==13:
+            s2='K'
+        else:
+            s2='%s'%s2
+        if s3==1:
+            s3='A'
+        elif s3==11:
+            s3='J'
+        elif s3==12:
+            s3='Q'
+        elif s3==13:
+            s3='K'
+        else:
+            s3='%s'%s3
+        if s4==1:
+            s4='A'
+        elif s4==11:
+            s4='J'
+        elif s4==12:
+            s4='Q'
+        elif s4==13:
+            s4='K'
+        else:
+            s4='%s'%s4
+        if s5==1:
+            s5='A'
+        elif s5==11:
+            s5='J'
+        elif s5==12:
+            s5='Q'
+        elif s5==13:
+            s5='K'
+        else:
+            s5='%s'%s5
+#为庄(电脑)替换1，11，12，13为A，J，Q，K
+        if ps1==1:
+            ps1='A'
+        elif ps1==11:
+            ps1='J'
+        elif ps1==12:
+            ps1='Q'
+        elif ps1==13:
+            ps1='K'
+        else:
+            ps1='%s'%ps1
+        if ps2==1:
+            ps2='A'
+        elif ps2==11:
+            ps2='J'
+        elif ps2==12:
+            ps2='Q'
+        elif ps2==13:
+            ps2='K'
+        else:
+            ps2='%s'%ps2
+        if ps3==1:
+            ps3='A'
+        elif ps3==11:
+            ps3='J'
+        elif ps3==12:
+            ps3='Q'
+        elif ps3==13:
+            ps3='K'
+        else:
+            ps3='%s'%ps3
+        if ps4==1:
+            ps4='A'
+        elif ps4==11:
+            ps4='J'
+        elif ps4==12:
+            ps4='Q'
+        elif ps4==13:
+            ps4='K'
+        else:
+            ps4='%s'%ps4
+        if ps5==1:
+            ps5='A'
+        elif ps5==11:
+            ps5='J'
+        elif ps5==12:
+            ps5='Q'
+        elif ps5==13:
+            ps5='K'
+        else:
+            ps5='%s'%ps5
+#判断结果，定输赢
+        if 9>=d2>pd2>0:
+            money=money+bet*2
+            print ('你的牌面为 %s,%s,%s,%s,%s,%10d'%(s1,s2,s3,s4,s5,d2))
+            print ('庄的牌面为 %s,%s,%s,%s,%s,%10d'%(ps1,ps2,ps3,ps4,ps5,pd2))
+            time.sleep(1)
+            print "你赢了，获得了2倍底注奖励"
+        elif 0<d2<pd2<=9:
+            #money=money-bet
+            print ('你的牌面为 %s,%s,%s,%s,%s,%10d'%(s1,s2,s3,s4,s5,d2))
+            print ('庄的牌面为 %s,%s,%s,%s,%s,%10d'%(ps1,ps2,ps3,ps4,ps5,pd2))
+            time.sleep(1)
+            print "你输了，失去了本次底注"
+        elif d2==0:
+            money=money+bet*50
+            print ('你的牌面为 %s,%s,%s,%s,%s,%10d'%(s1,s2,s3,s4,s5,d2))
+            print ('庄的牌面为 %s,%s,%s,%s,%s,%10d'%(ps1,ps2,ps3,ps4,ps5,pd2))
+            time.sleep(1)
+            print "WIN，WIN，WIN 你中了牛，奖励50倍底注"
+        elif pd2==0:
+            money=money-bet*50
+            print ('你的牌面为 %s,%s,%s,%s,%s,%10d'%(s1,s2,s3,s4,s5,d2))
+            print ('庄的牌面为 %s,%s,%s,%s,%s,%10d'%(ps1,ps2,ps3,ps4,ps5,pd2))
+            time.sleep(1)
+            print "LOW,LOW,LOW 你被庄爆牛了，失去50倍底注"
+        else:
+            money=money+bet
+            print ('你的牌面为 %s,%s,%s,%s,%s,%10d'%(s1,s2,s3,s4,s5,d2))
+            print ('庄的牌面为 %s,%s,%s,%s,%s,%10d'%(ps1,ps2,ps3,ps4,ps5,pd2))
+            time.sleep(1)
+            print "哎，点数一样阿，可惜"
+time.sleep(2)
+print '''
+          你因为输光了，被丢了出去.'''
